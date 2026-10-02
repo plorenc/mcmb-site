@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Komendy — MeshCore Message Box</title>
+<link rel="stylesheet" href="style.css"></head>
+<body><header><div class="wrap"><a class="brand" href="index.html">MeshCore Message Box</a>
+<nav><a href="index.html">O projekcie</a><a href="komendy.html" class=on>Komendy</a><a href="zmiany.html">Co nowego</a></nav></div></header>
+<main class="wrap"><h1>Komendy</h1><p>Jedna kartka, do wydruku albo przekazania nowej osobie w sieci. Pełny opis
+z wyjaśnieniami jest w instrukcji — to tu jest tylko
+skrót z przykładami.</p>
+<p>Wszystko wysyłasz jako <strong>prywatny DM</strong> do węzła skrzynki — jedyny wyjątek to
+<code>.find</code> na kanale <code>#cards</code>. Każda komenda zaczyna się od kropki.</p>
+<hr />
+<h2>Rejestracja (raz, na początku)</h2>
+<pre><code>.register:&lt;alias&gt;:&lt;hasło&gt;    .register:Piotr:moje-haslo1  -&gt;  OK zarejestrowano jako Piotr
+</code></pre>
+<p>Konto zakładasz sam. Hasło: 8–64 znaki, bez spacji i dwukropka — przyda się,
+gdy reset radia zmieni Ci klucz. Nie używaj hasła z innych miejsc. Alias
+zarezerwowany przez administratora zajmiesz tylko z jego kodem albo hasłem
+(ta sama komenda).</p>
+<h2>Twoje konto</h2>
+<pre><code>.recover:&lt;alias&gt;:&lt;hasło&gt;     po resecie radia: przenosi konto na to radio
+                             (3 złe hasła = blokada na 24 h)
+.rename:&lt;nowy_alias&gt;         zmiana aliasu, raz na 7 dni; stary jest Twój jeszcze 7 dni
+.password:&lt;hasło&gt;            ustawia hasło (konto założone kodem go nie ma)
+.password:&lt;stare&gt;:&lt;nowe&gt;     zmienia hasło
+</code></pre>
+<h2>Poczta</h2>
+<pre><code>.mail:&lt;alias&gt; &lt;treść&gt;          .mail:Ala spotkanie o 19:00   -&gt; OK -&gt; Ala [id:1447]
+.mail:&lt;a&gt;,&lt;b&gt;,&lt;c&gt; &lt;treść&gt;      .mail:Ala,Jan,Ola w drodze    -&gt; do max 5 osób naraz
+.get                            .get                         -&gt; [7] od Jan: ... (.ack:7)
+.ack:&lt;nr&gt;                       .ack:7                       -&gt; OK potwierdzono 7
+.status                         .status                      -&gt; masz 1 nowa, najstarsza 3 min
+.sent                           .sent                        -&gt; [id:1447] Ala: potwierdzona
+</code></pre>
+<p><code>.get</code> bez <code>.ack</code> pokaże tę samą wiadomość znowu — kasuje ją dopiero <code>.ack</code>.
+<code>[7]</code> to Twój numer krótki (dostaje go odbiorca), <code>[id:1447]</code> to numer
+bezwzględny (dostaje go nadawca).</p>
+<p><strong>Limit treści: 124 bajty</strong>, nie znaków — polska litera (ż, ą, ę...) liczy
+się za dwa. Za długa wiadomość jest odrzucona, nie skrócona.</p>
+<h2>Wiadomość, która nie mieści się w jednej transmisji — szkic</h2>
+<pre><code>.mail.draft:&lt;alias&gt; &lt;treść&gt;     .mail.draft:Ala spotkanie   -&gt; SZKIC 1447 (9 z 124 B)
+.add:&lt;id&gt; &lt;dalszy tekst&gt;        .add:1447 przeniesione      -&gt; SZKIC 1447 (22 z 124 B)
+.edit:&lt;id&gt; &lt;nowa treść&gt;         .edit:1447 cała nowa treść  -&gt; podmienia całość
+.send:&lt;id&gt;                      .send:1447                  -&gt; OK -&gt; Ala [id:1447] (2 czesci)
+.del:&lt;id&gt;                       .del:1447                   -&gt; kasuje szkic
+</code></pre>
+<p>Jeden otwarty szkic na konto. Nikt nic nie widzi, dopóki nie zrobisz
+<code>.send</code>. <code>.add</code>/<code>.edit</code> działają też na wiadomości już wysłanej, ale
+jeszcze nie odebranej przez adresata.</p>
+<h2>Twoja własna grupa prywatna (zakładasz sam, z radia)</h2>
+<pre><code>.group.create:&lt;nazwa&gt;            .group.create:rodzina        -&gt; OK grupa *rodzina utworzona
+.group.add:&lt;nazwa&gt;:&lt;alias&gt;       .group.add:rodzina:Ala       -&gt; OK Ala dodany do *rodzina
+.group.remove:&lt;nazwa&gt;:&lt;alias&gt;    .group.remove:rodzina:Ala    -&gt; OK Ala usuniety z *rodzina
+.group.delete:&lt;nazwa&gt;            .group.delete:rodzina        -&gt; OK grupa *rodzina skasowana
+.group.list                      .group.list                  -&gt; *rodzina
+.group.list:&lt;nazwa&gt;              .group.list:rodzina          -&gt; *rodzina: Ala Ola
+.mail:*&lt;nazwa&gt; &lt;treść&gt;           .mail:*rodzina wychodze o 10 -&gt; wysyłka do całej grupy
+</code></pre>
+<p>Gwiazdka (<code>*rodzina</code>) — Twoja lista, nikt inny jej nie widzi. Do 5 grup na
+konto, do 10 osób w każdej.</p>
+<h2>Grupa sieciowa (zakłada administrator)</h2>
+<pre><code>.mail:@&lt;grupa&gt; &lt;treść&gt;          .mail:@klub zbiorka 10:00   -&gt; OK -&gt; @klub (3 odb.) [id:1447-1449]
+</code></pre>
+<p>Małpa (<code>@klub</code>) — grupa wspólna, dodaje/usuwa ją tylko administrator z
+powłoki. Nie zobaczysz, kto w niej jest.</p>
+<h2>Powiadomienia o nowej poczcie</h2>
+<pre><code>.notify.on          -&gt; OK powiadomienia wlaczone (co 60 min)
+.notify:&lt;minuty&gt;     .notify:30   -&gt; OK interwal powiadomien: co 30 min   (min. 30)
+.notify.off          -&gt; OK powiadomienia wylaczone
+</code></pre>
+<p>Domyślnie wyłączone. <code>.get</code> samo wycisza powiadomienie o tym, co już
+zobaczyłeś.</p>
+<h2>Szukanie węzła po nazwie</h2>
+<pre><code>.find: &lt;nazwa albo prefiks&gt;    .find: Ala      -&gt; &lt;aabb...64znaki:Ala:2026-09-27 14:05&gt;
+.find.like: &lt;fragment&gt;         .find.like: NO5 -&gt; 2 pasuje: &lt;KANO5A&gt; &lt;S NO5 A&gt;   (min. 3 znaki)
+</code></pre>
+<p>Przydaje się, gdy potrzebujesz czyjegoś pełnego klucza (np. do prośby o
+<code>.register</code>), a znasz tylko nazwę węzła. Data i godzina (czas polski) = kiedy skrzynka
+ostatnio usłyszała advert węzła; <code>:nieakt</code> na końcu = dawno niesłyszany. Działa też na kanale <code>#cards</code> — bez konta, jedną linią. Starsze
+<code>.card:&lt;nazwa&gt;</code> nadal działa.</p>
+<h2>Reszta</h2>
+<pre><code>.ping                -&gt; pong, albo status gdy czeka poczta
+.whoami               -&gt; Piotr [6b901209cb3b]       (Twój alias i skrót klucza)
+.help                 -&gt; lista komend, które dziś działają
+.help:&lt;komenda&gt;        .help:register  -&gt; .register:&lt;alias&gt;:&lt;haslo&gt; - ...
+</code></pre>
+<hr />
+<h2>O czym warto pamiętać</h2>
+<ul>
+<li><strong>Parametry po dwukropku, nigdy po spacji</strong>: <code>.register:Jan:moje-haslo1</code>,
+  nie <code>.register Jan moje-haslo1</code>.</li>
+<li><strong>Cała komenda kończy się na pierwszej spacji</strong> — wszystko po niej to
+  treść (tylko <code>.mail</code> jej używa).</li>
+<li>Wielkość liter w nazwie komendy nie ma znaczenia (<code>.GET</code> = <code>.get</code>).</li>
+<li><strong>Brak odpowiedzi</strong> znaczy: tekst nie zaczynał się od komendy (<code>.nazwa</code>), nadawca nie
+  jest rozpoznany, albo to duplikat tej samej wiadomości — nigdy błąd, o
+  którym trzeba się martwić.</li>
+<li>Skrzynka rozpoznaje Cię po <strong>kluczu publicznym</strong>, nie po nazwie węzła —
+  zmiana nazwy w kliencie niczego nie psuje.</li>
+</ul></main>
+<footer class="wrap">Strona generowana automatycznie z dokumentacji projektu · 2026-09-29</footer>
+</body></html>

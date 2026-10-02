@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>O projekcie — MeshCore Message Box</title>
+<link rel="stylesheet" href="style.css"></head>
+<body><header><div class="wrap"><a class="brand" href="index.html">MeshCore Message Box</a>
+<nav><a href="index.html" class=on>O projekcie</a><a href="komendy.html">Komendy</a><a href="zmiany.html">Co nowego</a></nav></div></header>
+<main class="wrap"><h1>MeshCore Message Box</h1>
+<p><strong>Poczta dla sieci radiowej bez Internetu.</strong> Serwer <em>store-and-forward</em> dla sieci
+<a href="https://meshcore.io">MeshCore</a> / LoRa 868 MHz. Stoi na jednym małym komputerze z radiem, a użytkownicy
+piszą do niego zwykłymi wiadomościami prywatnymi z własnych urządzeń MeshCore.</p>
+
+<h2>Jak to wygląda w użyciu</h2>
+<p>Wysyłasz do węzła skrzynki prywatną wiadomość:</p>
+<pre><code>.mail:Jan Spotkanie przeniesione na 19:00</code></pre>
+<p>Gdy Jan pojawi się w zasięgu, pyta:</p>
+<pre><code>.get</code></pre>
+<p>i dostaje swoją wiadomość. Potwierdza ją komendą <code>.ack</code>. Pełna lista jest na stronie
+<a href="komendy.html">Komendy</a>.</p>
+
+<h2>Założenia</h2>
+<ul>
+<li><strong>Działa bez Internetu.</strong> Potrzebuje tylko zasilania, radia i własnej bazy danych.</li>
+<li><strong>Konto to pełny klucz publiczny urządzenia.</strong> Nazwa węzła ani alias nie są poświadczeniem.
+Jeśli prefiks klucza pasuje do zera lub kilku kontaktów, skrzynka odmawia, zamiast zgadywać.</li>
+<li><strong>Komendy pocztowe działają tylko w wiadomościach prywatnych.</strong> Kanały służą wyłącznie do
+historii i wyszukiwania węzłów (<code>.find</code>).</li>
+<li><strong>Przez radio konto zmienia tylko samo siebie.</strong> Cudze konta, blokady i rezerwacje
+zmienia wyłącznie administrator z powłoki lub panelu WWW.</li>
+<li><strong>Krótko, bo to LoRa.</strong> Wiadomość ma 160 bajtów, z czego na treść poczty zostaje 124.
+Dłuższe teksty składa się ze szkicu i wysyła w częściach.</li>
+<li><strong>Duplikaty są pomijane po cichu</strong>, żeby ponowiona transmisja nie wykonała komendy dwa razy.</li>
+</ul>
+
+<h2>Co potrafi</h2>
+<ul>
+<li>poczta do jednej osoby, listy odbiorców i grupy (własne i sieciowe),</li>
+<li>szkice, wiadomości wieloczęściowe, potwierdzenia, powiadomienia o nowej poczcie,</li>
+<li>samodzielna rejestracja i odzyskanie konta po resecie radia,</li>
+<li>wyszukiwanie węzłów po nazwie (<code>.find</code>) z datą ostatniego advertu,</li>
+<li>panel WWW administratora w sieci lokalnej: konta, grupy, historia rozmów, kontakty i kanały radia, kopia zapasowa.</li>
+</ul>
+
+<h2>Dla kogo</h2>
+<p>Dla społeczności, która ma własną sieć MeshCore i chce w niej zostawiać wiadomości osobom
+aktualnie poza zasięgiem. Projekt jest rozwijany przez jednego autora i działa na żywej sieci.</p>
+
+<p>Strona <a href="zmiany.html">Co nowego</a> pokazuje, jak projekt się zmienia.</p>
+</main>
+<footer class="wrap">Strona generowana automatycznie z dokumentacji projektu · 2026-09-29</footer>
+</body></html>
